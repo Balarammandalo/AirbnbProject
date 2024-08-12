@@ -1,0 +1,94 @@
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container{
+    flex: 1;
+}
+
+.navbar{
+    height: 4rem;
+    background-color: white;
+}
+.fa-compass{
+    color: red;
+    font-size: 3rem;
+}
+.nav-link{
+    color: brown !important;
+}
+
+.f-info-links a{
+    color: #222222;
+    margin-right: 2px;
+    text-decoration: none;
+}
+
+.f-info-lists a:hover{
+    text-decoration: underline;
+}
+.f-info-links , .f-info-socials {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.f-info-socials i{
+    margin-right: 1rem;
+    font-size: 1.5rem;
+}
+
+
+.f-info{
+    height: 4.5rem;
+    background-color: #ebebeb;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+    text-align: center;
+}
+
+
+.card{
+    border: none !important;
+    margin-bottom: 2rem;
+}
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% ;
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding: 0px !important;
+}
+
+.card-text p{
+    font-weight: 500 !important;
+}
+.listing-link{
+   text-decoration: none;
+}
+
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.4;
+    background-color: white;
+}
+
+.show-image{
+    height: 49vh;
+}
+
+.btns{
+    display: flex;
+}
+.edit-btn{
+    margin-right: 1.5rem;
+}

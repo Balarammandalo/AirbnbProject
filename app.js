@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const Listing = require("./models/listing.js")
 const path = require("path")
 const methodOverride = require("method-override")
+const ejsMate = require("ejs-mate")
 
 
 const main = async() =>{
@@ -12,10 +13,13 @@ const main = async() =>{
 
 main().then(res => console.log("connected to DB")).catch(err => console.log(err))
 
+app.engine('ejs' , ejsMate)
+
 app.set("view engine" , "ejs")
 app.set("views", path.join(__dirname , "views"))
-app.set(methodOverride("_method"))
 
+app.use(methodOverride("_method"))
+app.use(express.static(path.join(__dirname , "public")))
 app.use(express.urlencoded({extended: true}))
 
 app.get("/" , (req,res)=>{
@@ -49,35 +53,40 @@ app.post("/listings" , async(req,res) =>{
     res.redirect("/listings")
 })
 
-//get Id to edit 
+//get Edit throw id 
 app.get("/listings/:id/edit" , async (req,res) =>{
-    const {id} = req.params
+    const { id } = req.params
     const listing = await Listing.findById(id)
-    res.render("listings/edit.ejs" , { listing })
+    res.render("listings/edit.ejs" , {listing})
 })
 
-//update new Edit 
-app.put("/listings/:id" , async(req,res) =>{
+//update the new listing 
+app.put("/listings/:id" , async (req , res) =>{
     const { id } = req.params
     await Listing.findByIdAndUpdate(id , {...req.body.listing})
-    res.send("succes") 
+    res.redirect(`/listings/${id}`)
 })
 
-//         title: "My New villa",
-//         description: "By the beach",
-//         price: 1200,
-//         location: "Calangute Goa",
-//         country: "India",
-//     })
-//     await sampleListing.save()
-//     console.log("sample was save")
-//     res.send("success")
-// })
+//delete listing
+app.delete("/listings/:id" , async (req, res) =>{
+    const { id } = req.params
+    await Listing.findByIdAndDelete(id)
+    res.redirect("/listings")
+})
 
 
-
-
-
+// app.get("/testListing", async (req, res) => {
+//   let sampleListing = new Listing({
+//     title: "My New Villa",
+//     description: "By the beach",
+//     price: 1200,
+//     location: "Calangute, Goa",
+//     country: "India",
+//   })
+//   await sampleListing.save();
+//   console.log("sample was saved");
+//   res.send("successful testing");
+// });
 
 app.listen(3000,(req, res) =>{
     console.log("App listen on 3000 port")
