@@ -4,36 +4,51 @@
         <div class="col-8 offset-2" >
 
         <h3 class="text-danger">Create New Listing</h3> <br/>
-            <form method="POST" action="/listings">
+            <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
 
                 <div class="mb-2">
                     <label for="title" class="form-label">Title: </label>
-                    <input name="listing[title]" id="title" class="form-control" placeholder="Add a catchy Title" type="text"/> 
+                    <input name="listing[title]" id="title" class="form-control" placeholder="Add a catchy Title" type="text" required/> 
+                    <div class="invalid-feedback">
+                        Enter Valid Title Name.
+                    </div>
                 </div>
 
                 <div class="mb-2">
                     <label for="description" class="form-label">Description: </label>
-                    <textarea name="listing[description]" id="description" class="form-control"  placeholder="Enter description" type="text"></textarea> 
+                    <textarea name="listing[description]" id="description" class="form-control"  placeholder="Enter description" required type="text"></textarea> 
+                    <div class="invalid-feedback">
+                        Enter Valid Description Name.
+                    </div>
                 </div>
 
                 <div class="mb-2 ">
                     <label for="price" class="form-label">Price: </label>
-                    <input name="listing[price]" id="price" class="form-control" placeholder="1200" type="number"/> 
+                    <input name="listing[price]" id="price" class="form-control" placeholder="1200" required /> 
+                    <div class="invalid-feedback">
+                        Enter Valid Price Amount.
+                    </div>
                 </div>
 
                 <div class="mb-2">
-                    <label for="image" class="form-label">Image: </label>
-                    <input name="listing[image]" class="form-control" id="image" placeholder="Enter Image URL/Link" type="text"/> 
+                    <label for="image" class="form-label">Upload Listing Image: </label>
+                    <input name="listing[image]" class="form-control" id="image" type="file" required/> 
                 </div>
 
                 <div class="mb-2">
                     <label for="country" class="form-label">Country: </label>
-                    <input name="listing[country]" class="form-control" id="country" placeholder="India" type="text"/> 
+                    <input name="listing[country]" class="form-control" id="country" required placeholder="India" type="text"/> 
+                    <div class="invalid-feedback">
+                        Enter Valid Country Name.
+                    </div>
                 </div>
 
                 <div class="mb-2">
                     <label for="location" class="form-label">Location: </label>
-                    <input name="listing[location]" class="form-control" id="location" placeholder="Odisha , Gajapati" type="text"/> 
+                    <input name="listing[location]" class="form-control" id="location" required placeholder="Odisha , Gajapati" type="text"/>
+                    <div class="invalid-feedback">
+                        Enter Valid Location Name.
+                    </div> 
                 </div>
 
                 <button class="btn btn-danger mb-3">Add</button> <br/>

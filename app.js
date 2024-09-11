@@ -1,14 +1,40 @@
+if(process.env.NODE_ENV != "production"){
+    require("dotenv").config()
+}
+
 const express  = require("express")
 const app = express()
 const mongoose = require("mongoose")
-const Listing = require("./models/listing.js")
 const path = require("path")
 const methodOverride = require("method-override")
 const ejsMate = require("ejs-mate")
+const ExpressError = require("./utils/ExpressError.js")
+const session = require("express-session")
+const MongoStore = require("connect-mongo")
+const flash = require("connect-flash")
+const User = require("./models/user.js")
+const passport = require("passport")
+const LocalStrategy = require("passport-local")
 
+
+// const Listing = require("./models/listing.js")
+// const wrapAsync = require("./utils/wrapAsync.js")
+// const {listingSchema} = require("./schema.js")
+// const {reviewSchema} = require("./schema.js")
+// const Review = require("./models/review.js")
+
+const listingRouter = require("./routes/listing.js")
+const reviewRouter = require("./routes/review.js")
+const userRouter = require("./routes/user.js")
+
+const user = require("./models/user.js")
+
+// const mongoDbUrl = "mongodb://localhost:27017/wanderlust"
+
+const dbUrl = process.env.ATLASDB_URL;
 
 const main = async() =>{
-    await mongoose.connect("mongodb://localhost:27017/wanderlust")
+    await mongoose.connect(dbUrl)
 }
 
 main().then(res => console.log("connected to DB")).catch(err => console.log(err))
@@ -22,71 +48,58 @@ app.use(methodOverride("_method"))
 app.use(express.static(path.join(__dirname , "public")))
 app.use(express.urlencoded({extended: true}))
 
-app.get("/" , (req,res)=>{
-    res.send("Successfully Root Connect")
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto:{secret: process.env.SECRET},
+    touchAfter: 24 * 3600
+})
+store.on("error" , () =>{
+    console.log("ERROR  IN MONGO SESSION STORE" , err)
 })
 
-//get All Listings
-app.get("/listings" , async (req , res) =>{
-    const allListings = await Listing.find({})
-    res.render("./listings/index.ejs" , {allListings})
+const sessionOption = {
+    store: store, 
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie:{
+        expire : Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true
+    }
+}
+
+app.use(session(sessionOption))
+app.use(flash());
+
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+app.use((req , res , next) =>{
+    res.locals.successMsg = req.flash("success")
+    res.locals.errorMsg = req.flash("error")
+    res.locals.currUser = req.user
+    next()
 })
 
-//create a new 
-app.get("/listings/new" , (req,res) =>{
-    res.render("listings/new.ejs")
+app.use("/listings" , listingRouter)
+app.use("/listings/:id/reviews", reviewRouter)
+app.use("/", userRouter)
+
+app.all("*", (req , res , next) =>{
+    next(new ExpressError(404 , "Page Not found!"))
 })
 
-//Id Details
-app.get("/listings/:id" , async(req,res) =>{
-    const {id} = req.params
-    const listings = await Listing.findById(id)
-    res.render("listings/show.ejs" , {listings})
-})
-
-// new Listing Add in DB 
-app.post("/listings" , async(req,res) =>{
-    // const {title, price, description, location , country , image} = req.body 
-    const inputListing = req.body.listing;
-    const newListing = new Listing(inputListing)
-    newListing.save()
-    res.redirect("/listings")
-})
-
-//get Edit throw id 
-app.get("/listings/:id/edit" , async (req,res) =>{
-    const { id } = req.params
-    const listing = await Listing.findById(id)
-    res.render("listings/edit.ejs" , {listing})
-})
-
-//update the new listing 
-app.put("/listings/:id" , async (req , res) =>{
-    const { id } = req.params
-    await Listing.findByIdAndUpdate(id , {...req.body.listing})
-    res.redirect(`/listings/${id}`)
-})
-
-//delete listing
-app.delete("/listings/:id" , async (req, res) =>{
-    const { id } = req.params
-    await Listing.findByIdAndDelete(id)
-    res.redirect("/listings")
-})
-
-
-// app.get("/testListing", async (req, res) => {
-//   let sampleListing = new Listing({
-//     title: "My New Villa",
-//     description: "By the beach",
-//     price: 1200,
-//     location: "Calangute, Goa",
-//     country: "India",
-//   })
-//   await sampleListing.save();
-//   console.log("sample was saved");
-//   res.send("successful testing");
-// });
+app.use((err, req , res , next)=>{
+    let {status = 500 , message = "Please Enter validity data"} = err
+    console.log(err)
+    res.status(status).render("listings/error.ejs" , {message})
+ })
 
 app.listen(3000,(req, res) =>{
     console.log("App listen on 3000 port")

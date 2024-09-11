@@ -53,7 +53,7 @@ body{
 }
 
 
-.card{
+.listing-card{
     border: none !important;
     margin-bottom: 2rem;
 }
@@ -78,7 +78,7 @@ body{
     opacity: 0;
 }
 .card-img-overlay:hover{
-    opacity: 0.4;
+    opacity: 0.5;
     background-color: white;
 }
 
@@ -92,3 +92,6 @@ body{
 .edit-btn{
     margin-right: 1.5rem;
 }
+
+
+

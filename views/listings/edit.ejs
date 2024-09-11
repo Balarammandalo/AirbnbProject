@@ -3,37 +3,41 @@
     <div class="row mt-3">
         <div class="col-8 offset-2" >
             <h3 class="text-danger">Edit Listing</h3>
-            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" >
+            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data" >
 
                 <div class="mb-2">
                     <label for="title" class="form-label">Title: </label>
-                    <input name="listing[title]" id="title" value="<%= listing.title %>" class="form-control" type="text"/> 
+                    <input name="listing[title]" id="title" required value="<%= listing.title %>" class="form-control" type="text"/> 
                 </div>
 
                 <div class="mb-2">
                     <label for="description" class="form-label">Description: </label>
-                    <textarea name="listing[description]" to = "description" class="form-control"type="text"> <%= listing.description %> </textarea> 
+                    <textarea name="listing[description]" required to="description" class="form-control"type="text"> <%= listing.description %> </textarea> 
+                </div>
+
+                <div class="mn-3">
+                    Original Listing Image 
+                    <img src="<%= originalImageUrl %>" />
+                </div>
+
+                <div class="mb-2">
+                    <label for="image" class="form-label">Upload New Image </label>
+                    <input name="listing[image]" class="form-control" id="image" type="file"/> 
                 </div>
 
                 <div class="mb-2 ">
                     <label for="price" class="form-label">Price: </label>
-                    <input name="listing[price]" id="price" class="form-control" value="<%= listing.price %>" type="number"/> 
+                    <input name="listing[price]" id="price" required class="form-control" value="<%= listing.price %>" type="number"/> 
                 </div>
 
                 <div class="mb-2">
                     <label for="country" class="form-label">Country: </label>
-                    <input name="listing[image]" class="form-control" id="country" value="<%= listing.country %>"   type="text"/> 
+                    <input name="listing[country]" required class="form-control" id="country" value="<%= listing.country %>"   type="text"/> 
                 </div>
-
-                <div class="mb-2">
-                    <label for="image" class="form-label">Image: </label>
-                    <input name="listing[image]" class="form-control" id="image" value="<%= listing.image %>" type="text"/> 
-                </div>
-
 
                 <div class="mb-2">
                     <label for="location" class="form-label">Location: </label>
-                    <input name="listing[location]" class="form-control" id="location" value="<%= listing.location %>" type="text"/> 
+                    <input name="listing[location]" class="form-control" required id="location" value="<%= listing.location %>" type="text"/> 
                 </div>
                 
                 <button class="btn btn-danger mt-3 mb-3">Save</button>
