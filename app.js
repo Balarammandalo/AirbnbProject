@@ -29,12 +29,12 @@ const userRouter = require("./routes/user.js")
 
 const user = require("./models/user.js")
 
-// const mongoDbUrl = "mongodb://localhost:27017/wanderlust"
+const mongoDbUrl = "mongodb://localhost:27017/wanderlust"
 
-const dbUrl = process.env.ATLASDB_URL;
+// const dbUrl = process.env.ATLASDB_URL;
 
 const main = async() =>{
-    await mongoose.connect(dbUrl)
+    await mongoose.connect(mongoDbUrl)
 }
 
 main().then(res => console.log("connected to DB")).catch(err => console.log(err))
@@ -49,7 +49,7 @@ app.use(express.static(path.join(__dirname , "public")))
 app.use(express.urlencoded({extended: true}))
 
 const store = MongoStore.create({
-    mongoUrl: dbUrl,
+    mongoUrl: mongoDbUrl,
     crypto:{secret: process.env.SECRET},
     touchAfter: 24 * 3600
 })
