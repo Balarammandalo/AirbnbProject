@@ -17,12 +17,6 @@ const passport = require("passport")
 const LocalStrategy = require("passport-local")
 
 
-// const Listing = require("./models/listing.js")
-// const wrapAsync = require("./utils/wrapAsync.js")
-// const {listingSchema} = require("./schema.js")
-// const {reviewSchema} = require("./schema.js")
-// const Review = require("./models/review.js")
-
 const listingRouter = require("./routes/listing.js")
 const reviewRouter = require("./routes/review.js")
 const userRouter = require("./routes/user.js")
