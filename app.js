@@ -24,6 +24,7 @@ const userRouter = require("./routes/user.js")
 const user = require("./models/user.js")
 
 const mongoDbUrl = "mongodb://localhost:27017/wanderlust"
+// const mongoDbUrl = process.env.ATLASDB_URL
 
 // const dbUrl = process.env.ATLASDB_URL;
 
@@ -95,6 +96,6 @@ app.use((err, req , res , next)=>{
     res.status(status).render("listings/error.ejs" , {message})
  })
 
-app.listen(3000,(req, res) =>{
+app.listen(3000,() =>{
     console.log("App listen on 3000 port")
 })
